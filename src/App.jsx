@@ -1,4 +1,6 @@
 import { useState } from "react";
+import { ToastContainer, toast } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
 import logo from "./assets/logo-text.png";
 import banner from "./assets/banner-stack.png";
 import technologiesData from "./technologies.json";
@@ -6,12 +8,16 @@ import technologiesData from "./technologies.json";
 function App() {
   const [selectedTechnologies, setSelectedTechnologies] = useState([]);
 
-  // Check if a tech is already selected to prevent duplicates
+  // Check if a tech is already selected to prevent duplicates & show alert
   const handleSelectTechnology = (technology) => {
-    if (!selectedTechnologies.find((t) => t.id === technology.id)) {
-      setSelectedTechnologies([...selectedTechnologies, technology]);
-    }
-  };
+  if (!selectedTechnologies.find((t) => t.id === technology.id)) {
+    setSelectedTechnologies([...selectedTechnologies, technology]);
+
+    toast.success(`${technology.name} added to your stack!`);
+  } else {
+    alert(`"${technology.name}" is already in your stack!`);
+  }
+};
 
   // Remove a single technology
   const handleRemoveTechnology = (techId) => {
@@ -28,6 +34,7 @@ function App() {
     switch (badge) {
       case "Popular":
       case "Modern":
+      case "SSR / Edge":
         return "text-cyan-500 bg-cyan-50 border-cyan-100";
       case "Versatile":
       case "Standard":
@@ -50,14 +57,11 @@ function App() {
 
   return (
     <>
+     <ToastContainer />
       {/* Navbar */}
       <nav className="sticky top-0 z-50 border-b border-gray-200 bg-white">
-        {/* Desktop Navbar */}
-        <div className="mx-auto hidden max-w-6xl items-center justify-between px-6 py-3 md:flex">
-          {/* Logo */}
+        <div className="mx-auto hidden max-w-7xl items-center justify-between px-6 py-3 md:flex lg:px-20">
           <img src={logo} alt="Dev Stack" className="h-8 w-auto" />
-
-          {/* Navigation */}
           <ul className="flex items-center gap-6 font-['Plus_Jakarta_Sans'] text-sm font-medium text-[#334155]">
             <li className="cursor-pointer text-pink-500">Home</li>
             <li className="cursor-pointer">Technologies</li>
@@ -65,8 +69,6 @@ function App() {
             <li className="cursor-pointer">About</li>
             <li className="cursor-pointer">Contact</li>
           </ul>
-
-          {/* Buttons */}
           <div className="flex items-center gap-5 font-['Plus_Jakarta_Sans']">
             <button className="text-sm font-medium text-[#334155] transition-colors hover:text-slate-900">
               Sign In
@@ -79,11 +81,8 @@ function App() {
 
         {/* Mobile Navbar */}
         <div className="flex items-center justify-between px-4 py-3 md:hidden">
-          {/* Hamburger */}
           <button className="text-2xl text-[#334155]">☰</button>
-          {/* Center Logo */}
           <img src={logo} alt="Dev Stack" className="h-7 w-auto" />
-          {/* Mobile Buttons */}
           <div className="flex items-center gap-2">
             <button className="text-xs font-medium text-[#334155]">Sign In</button>
             <button className="rounded-full bg-pink-500 px-3 py-1.5 text-xs font-semibold text-white">
@@ -95,7 +94,7 @@ function App() {
 
       {/* Hero Section */}
       <section className="px-6 py-12 md:py-20 font-['Plus_Jakarta_Sans'] md:px-12 lg:px-20 text-center md:text-left">
-        <div className="mx-auto flex flex-col md:flex-row max-w-6xl items-center justify-between gap-10 md:gap-10">
+        <div className="mx-auto flex flex-col md:flex-row max-w-7xl items-center justify-between gap-10">
           <div className="flex flex-col items-center md:items-start max-w-2xl">
             <h1 className="text-4xl font-extrabold leading-tight text-[#0f172a] md:text-6xl">
               Build Your Ideal <br className="md:hidden" />
@@ -128,60 +127,75 @@ function App() {
       </section>
 
       {/* ================= TECHNOLOGY LIST SECTION ================= */}
-      <section className="px-6 py-12 md:px-12 lg:px-20 max-w-[1400px] mx-auto font-['Inter']">
-        {/* Layout: Main Grid (Left) + Sidebar (Right) */}
+      <section className="px-6 py-12 md:px-12 lg:px-20 max-w-[1440px] mx-auto font-['Inter']">
         <div className="flex flex-col lg:flex-row gap-8 items-start">
           
-          {/* LEFT: Grid for Cards */}
+          {/* LEFT: Grid for Cards (1 col mobile, 2 col tablet, 3 col desktop) */}
           <div className="flex-1 grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-6">
-            {technologiesData.map((tech) => (
-              <div 
-                key={tech.id} 
-                className="flex flex-col justify-between h-full bg-white border border-gray-200 p-6 rounded-2xl shadow-sm hover:shadow-md transition-shadow"
-              >
-                <div>
-                  {/* Icon & Badge Row */}
-                  <div className="flex justify-between items-start mb-5">
-                    <div className="w-12 h-12 flex items-center justify-center bg-gray-50 rounded-full border border-gray-100">
-                      <img src={tech.icon} alt={tech.name} className="w-7 h-7 object-contain" />
+            {technologiesData.map((tech) => {
+              // Check if this specific tech is already in the stack
+              const isAdded = selectedTechnologies.some((t) => t.id === tech.id);
+
+              return (
+                <div 
+                  key={tech.id} 
+                  className="flex flex-col justify-between h-full bg-white border border-gray-200 p-6 rounded-2xl shadow-sm hover:shadow-[0_4px_20px_rgb(0,0,0,0.06)] transition-all duration-300"
+                >
+                  <div>
+                    {/* Icon, Title (Mobile) & Badge Row */}
+                    <div className="flex justify-between items-center md:items-start mb-4">
+                      <div className="flex items-center gap-3">
+                        <div className="w-12 h-12 shrink-0 flex items-center justify-center bg-gray-50 rounded-full border border-gray-100">
+                          <img src={tech.icon} alt={tech.name} className="w-7 h-7 object-contain" />
+                        </div>
+                        <h3 className="text-xl font-bold text-gray-900 md:hidden">{tech.name}</h3>
+                      </div>
+                      <span className={`shrink-0 px-3 py-1 text-[11px] font-semibold rounded-full border ${getBadgeStyles(tech.badge)}`}>
+                        {tech.badge}
+                      </span>
                     </div>
-                    {/* Dynamic Badge */}
-                    <span className={`px-3 py-1 text-[11px] font-semibold rounded-full border ${getBadgeStyles(tech.badge)}`}>
-                      {tech.badge}
-                    </span>
+
+                    <h3 className="hidden md:block text-xl font-bold text-gray-900 mb-2">{tech.name}</h3>
+                    
+                    <p className="text-sm text-gray-500 leading-relaxed mb-6 line-clamp-3">
+                      {tech.description}
+                    </p>
                   </div>
 
-                  {/* Title & Description */}
-                  <h3 className="text-xl font-bold text-gray-900 mb-2">{tech.name}</h3>
-                  <p className="text-sm text-gray-500 leading-relaxed mb-6 line-clamp-3">
-                    {tech.description}
-                  </p>
-                </div>
+                  <div>
+                    {/* Attributes Row */}
+                    <div className="flex items-center justify-between text-xs font-medium text-gray-600 mb-5">
+                      <span className="bg-gray-50 border border-gray-200 px-2.5 py-1 rounded-md">
+                        {tech.category}
+                      </span>
+                      <span className="bg-gray-50 border border-gray-200 px-2.5 py-1 rounded-md">
+                        {tech.difficulty}
+                      </span>
+                      <span className="flex items-center gap-1 text-amber-500 font-bold">
+                        ★ {tech.rating}
+                      </span>
+                    </div>
 
-                <div>
-                  {/* Attributes Row */}
-                  <div className="flex items-center gap-2 text-xs font-medium text-gray-600 mb-5">
-                    <span className="bg-gray-50 border border-gray-200 px-2.5 py-1 rounded-md">
-                      {tech.category}
-                    </span>
-                    <span className="bg-gray-50 border border-gray-200 px-2.5 py-1 rounded-md">
-                      {tech.difficulty}
-                    </span>
-                    <span className="ml-auto flex items-center gap-1 text-amber-500 font-bold">
-                      ★ {tech.rating}
-                    </span>
+                    {/* Dynamic Add Button (changes state if already added) */}
+                    {isAdded ? (
+                      <button 
+                        disabled
+                        className="w-full bg-green-50 text-green-600 border border-green-200 py-2.5 rounded-lg text-sm font-semibold cursor-not-allowed flex items-center justify-center gap-2"
+                      >
+                        ✓ Added to Stack
+                      </button>
+                    ) : (
+                      <button 
+                        onClick={() => handleSelectTechnology(tech)}
+                        className="w-full bg-[#0f172a] hover:bg-gray-800 text-white py-2.5 rounded-lg text-sm font-semibold transition-colors"
+                      >
+                        Add to Stack
+                      </button>
+                    )}
                   </div>
-
-                  {/* Add Button */}
-                  <button 
-                    onClick={() => handleSelectTechnology(tech)}
-                    className="w-full bg-[#0f172a] hover:bg-gray-800 text-white py-2.5 rounded-lg text-sm font-semibold transition-colors"
-                  >
-                    Add to Stack
-                  </button>
                 </div>
-              </div>
-            ))}
+              );
+            })}
           </div>
 
           {/* RIGHT: Sticky Sidebar "Your Stack" */}
@@ -204,7 +218,7 @@ function App() {
                 {selectedTechnologies.map((tech) => (
                   <div key={tech.id} className="flex items-center justify-between p-3 bg-white border border-gray-200 rounded-xl">
                     <div className="flex items-center gap-3">
-                      <div className="w-8 h-8 flex items-center justify-center bg-gray-50 rounded-full border border-gray-100">
+                      <div className="w-8 h-8 shrink-0 flex items-center justify-center bg-gray-50 rounded-full border border-gray-100">
                         <img src={tech.icon} alt={tech.name} className="w-5 h-5 object-contain" />
                       </div>
                       <div>
@@ -212,6 +226,7 @@ function App() {
                         <p className="text-[11px] text-gray-500">{tech.category}</p>
                       </div>
                     </div>
+                    {/* Single Item Remove Button */}
                     <button 
                       onClick={() => handleRemoveTechnology(tech.id)}
                       className="text-gray-400 hover:text-red-500 text-lg transition-colors p-1"
@@ -233,7 +248,77 @@ function App() {
           </div>
         </div>
       </section>
-    </>
+
+      {/* ================= FOOTER SECTION ================= */}
+      <footer className="border-t border-gray-200 bg-white pt-12 pb-6 font-['Plus_Jakarta_Sans']">
+        <div className="mx-auto max-w-7xl px-6 md:px-12 lg:px-20">
+          
+          {/* Top part of footer: Brand & Links */}
+          <div className="grid grid-cols-1 gap-10 md:grid-cols-2 lg:grid-cols-5 lg:gap-8 mb-8 md:mb-16">
+            
+            {/* Brand Block (Centered on Mobile, Left on Desktop) */}
+            <div className="flex flex-col items-center text-center lg:col-span-2 lg:items-start lg:text-left">
+              <img src={logo} alt="Dev Stack" className="h-7 w-auto mb-4" />
+              <p className="text-[#64748b] text-[13px] leading-relaxed mb-6 max-w-[280px] lg:max-w-xs">
+                Curated tools, technologies, and resources for developers building modern software.
+              </p>
+              
+              {/* Social Links */}
+              <div className="flex items-center gap-3 text-[13px] font-medium text-[#64748b]">
+                <a href="#" className="hover:text-pink-500 transition-colors">GitHub</a>
+                <span className="text-gray-300">•</span>
+                <a href="#" className="hover:text-pink-500 transition-colors">Twitter</a>
+                <span className="text-gray-300">•</span>
+                <a href="#" className="hover:text-pink-500 transition-colors">LinkedIn</a>
+              </div>
+            </div>
+
+            {/* Links Group 1: Product (Hidden on mobile) */}
+            <div className="hidden md:block">
+              <h4 className="font-bold text-gray-900 mb-4">Product</h4>
+              <ul className="space-y-3 text-sm text-gray-500 font-medium">
+                <li><a href="#" className="hover:text-pink-500 transition-colors">Features</a></li>
+                <li><a href="#" className="hover:text-pink-500 transition-colors">Integrations</a></li>
+                <li><a href="#" className="hover:text-pink-500 transition-colors">Pricing</a></li>
+                <li><a href="#" className="hover:text-pink-500 transition-colors">Changelog</a></li>
+              </ul>
+            </div>
+
+            {/* Links Group 2: Company (Hidden on mobile) */}
+            <div className="hidden md:block">
+              <h4 className="font-bold text-gray-900 mb-4">Company</h4>
+              <ul className="space-y-3 text-sm text-gray-500 font-medium">
+                <li><a href="#" className="hover:text-pink-500 transition-colors">About Us</a></li>
+                <li><a href="#" className="hover:text-pink-500 transition-colors">Careers</a></li>
+                <li><a href="#" className="hover:text-pink-500 transition-colors">Blog</a></li>
+                <li><a href="#" className="hover:text-pink-500 transition-colors">Contact</a></li>
+              </ul>
+            </div>
+
+            {/* Links Group 3: Legal (Hidden on mobile) */}
+            <div className="hidden md:block">
+              <h4 className="font-bold text-gray-900 mb-4">Legal</h4>
+              <ul className="space-y-3 text-sm text-gray-500 font-medium">
+                <li><a href="#" className="hover:text-pink-500 transition-colors">Privacy Policy</a></li>
+                <li><a href="#" className="hover:text-pink-500 transition-colors">Terms of Service</a></li>
+                <li><a href="#" className="hover:text-pink-500 transition-colors">Cookie Policy</a></li>
+              </ul>
+            </div>
+          </div>
+
+          {/* Bottom Bar: Row on all devices */}
+          <div className="flex flex-row items-center justify-between border-t border-gray-100 pt-6 text-[11px] md:text-sm">
+            <p className="text-[#94a3b8] font-medium">
+              © {new Date().getFullYear()} Dev Stack. All rights reserved.
+            </p>
+            <div className="flex items-center gap-4 text-[#94a3b8] font-medium">
+              <a href="#" className="hover:text-gray-900 transition-colors">Privacy</a>
+              <a href="#" className="hover:text-gray-900 transition-colors">Terms</a>
+            </div>
+          </div>
+        </div>
+      </footer>
+      </>
   );
 }
 
