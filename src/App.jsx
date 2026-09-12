@@ -21,8 +21,16 @@ function App() {
 
   // Remove a single technology
   const handleRemoveTechnology = (techId) => {
-    setSelectedTechnologies(selectedTechnologies.filter((t) => t.id !== techId));
-  };
+  const removedTechnology = selectedTechnologies.find(
+    (technology) => technology.id === techId
+  );
+
+  setSelectedTechnologies(
+    selectedTechnologies.filter((technology) => technology.id !== techId)
+  );
+
+  toast.info(`${removedTechnology.name} removed from your stack!`);
+};
 
   // Remove all selected technologies
   const handleRemoveAll = () => {
