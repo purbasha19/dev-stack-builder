@@ -1,12 +1,21 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import logo from "./assets/logo-text.png";
 import banner from "./assets/banner-stack.png";
-import technologiesData from "./technologies.json";
 
 function App() {
   const [selectedTechnologies, setSelectedTechnologies] = useState([]);
+  const [technologies, setTechnologies] = useState([]);
+  const [loading, setLoading] = useState(true);
+useEffect(() => {
+  fetch("/technologies.json")
+    .then((response) => response.json())
+    .then((data) => {
+      setTechnologies(data);
+      setLoading(false);
+    });
+}, []);
 
   // Check if a tech is already selected to prevent duplicates & show alert
   const handleSelectTechnology = (technology) => {
@@ -142,7 +151,12 @@ function App() {
           
           {/* LEFT: Grid for Cards (1 col mobile, 2 col tablet, 3 col desktop) */}
           <div className="flex-1 grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-6">
-            {technologiesData.map((tech) => {
+          {loading ? (
+           <p className="col-span-full text-center text-gray-500">
+           Loading technologies...
+           </p>
+           ) : (
+               technologies.map((tech) => {
               // Check if this specific tech is already in the stack
               const isAdded = selectedTechnologies.some((t) => t.id === tech.id);
 
@@ -200,8 +214,9 @@ function App() {
                   </div>
                 </div>
               );
-            })}
-          </div>
+                })
+              )}
+           </div>
 
           {/* RIGHT: Sticky Sidebar "Your Stack" */}
           <div className="w-full lg:w-[320px] shrink-0 sticky top-24 bg-white border border-gray-200 rounded-2xl shadow-sm p-6">
