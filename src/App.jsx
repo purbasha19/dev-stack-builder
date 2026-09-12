@@ -15,8 +15,8 @@ function App() {
 
     toast.success(`${technology.name} added to your stack!`);
   } else {
-    alert(`"${technology.name}" is already in your stack!`);
-  }
+  toast.warning(`"${technology.name}" is already in your stack!`);
+}
 };
 
   // Remove a single technology
@@ -177,21 +177,16 @@ function App() {
                     </div>
 
                     {/* Dynamic Add Button (changes state if already added) */}
-                    {isAdded ? (
-                      <button 
-                        disabled
-                        className="w-full bg-green-50 text-green-600 border border-green-200 py-2.5 rounded-lg text-sm font-semibold cursor-not-allowed flex items-center justify-center gap-2"
-                      >
-                        ✓ Added to Stack
-                      </button>
-                    ) : (
-                      <button 
-                        onClick={() => handleSelectTechnology(tech)}
-                        className="w-full bg-[#0f172a] hover:bg-gray-800 text-white py-2.5 rounded-lg text-sm font-semibold transition-colors"
-                      >
-                        Add to Stack
-                      </button>
-                    )}
+                    <button
+                      onClick={() => handleSelectTechnology(tech)}
+                      className={`w-full py-2.5 rounded-lg text-sm font-semibold transition-colors ${
+                     isAdded
+                       ? "bg-green-50 text-green-600 border border-green-200"
+                       : "bg-[#0f172a] text-white hover:bg-gray-800"
+                    }`}
+                 >
+                   {isAdded ? "✓ Added to Stack" : "Add to Stack"}
+                </button>
                   </div>
                 </div>
               );
