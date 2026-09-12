@@ -133,6 +133,7 @@ useEffect(() => {
           </ul>
           </div>
          )}
+           </nav>
 
       {/* Hero Section */}
       <section className="px-6 py-12 md:py-20 font-['Plus_Jakarta_Sans'] md:px-12 lg:px-20 text-center md:text-left">
