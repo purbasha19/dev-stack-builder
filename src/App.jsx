@@ -8,6 +8,7 @@ function App() {
   const [selectedTechnologies, setSelectedTechnologies] = useState([]);
   const [technologies, setTechnologies] = useState([]);
   const [loading, setLoading] = useState(true);
+  const [menuOpen, setMenuOpen] = useState(false);
 useEffect(() => {
   fetch("/technologies.json")
     .then((response) => response.json())
@@ -100,16 +101,38 @@ useEffect(() => {
 
         {/* Mobile Navbar */}
         <div className="flex items-center justify-between px-4 py-3 md:hidden">
-          <button className="text-2xl text-[#334155]">☰</button>
-          <img src={logo} alt="Dev Stack" className="h-7 w-auto" />
-          <div className="flex items-center gap-2">
-            <button className="text-xs font-medium text-[#334155]">Sign In</button>
-            <button className="rounded-full bg-pink-500 px-3 py-1.5 text-xs font-semibold text-white">
-              Sign Up
-            </button>
-          </div>
+         <button
+          onClick={() => setMenuOpen(!menuOpen)}
+          className="text-2xl text-[#334155]"
+          >
+        ☰
+        </button>
+
+        <img src={logo} alt="Dev Stack" className="h-7 w-auto" />
+
+        <div className="flex items-center gap-2">
+        <button className="text-xs font-medium text-[#334155]">
+        Sign In
+        </button>
+
+        <button className="rounded-full bg-pink-500 px-3 py-1.5 text-xs font-semibold text-white">
+         Sign Up
+        </button>
         </div>
-      </nav>
+      </div>
+
+      {/* Mobile Menu */}
+       {menuOpen && (
+        <div className="border-t border-gray-200 bg-white px-4 py-4 md:hidden">
+          <ul className="flex flex-col gap-4 text-sm font-medium text-[#334155]">
+          <li className="cursor-pointer text-pink-500">Home</li>
+          <li className="cursor-pointer">Technologies</li>
+          <li className="cursor-pointer">Projects</li>
+          <li className="cursor-pointer">About</li>
+          <li className="cursor-pointer">Contact</li>
+          </ul>
+          </div>
+         )}
 
       {/* Hero Section */}
       <section className="px-6 py-12 md:py-20 font-['Plus_Jakarta_Sans'] md:px-12 lg:px-20 text-center md:text-left">
