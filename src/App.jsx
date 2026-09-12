@@ -34,8 +34,10 @@ function App() {
 
   // Remove all selected technologies
   const handleRemoveAll = () => {
-    setSelectedTechnologies([]);
-  };
+  setSelectedTechnologies([]);
+
+  toast.info("All technologies removed from your stack!");
+};
 
   // Helper function for dynamic badge colors
   const getBadgeStyles = (badge) => {
