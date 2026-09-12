@@ -117,8 +117,8 @@ useEffect(() => {
           <div className="flex flex-col items-center md:items-start max-w-2xl">
             <h1 className="text-4xl font-extrabold leading-tight text-[#0f172a] md:text-6xl">
               Build Your Ideal <br className="md:hidden" />
-              <span className="bg-gradient-to-r from-orange-500 via-pink-500 to-purple-600 bg-clip-text text-transparent">
-                Development Stack
+              <span className="brand-gradient-text">
+               Development Stack
               </span>
             </h1>
             <p className="mt-6 max-w-2xl text-base leading-relaxed text-[#475569] md:text-lg">
@@ -127,7 +127,7 @@ useEffect(() => {
               project.
             </p>
             <div className="mt-8 flex flex-wrap justify-center md:justify-start gap-4">
-              <button className="rounded-md bg-gradient-to-r from-orange-400 to-pink-500 px-6 py-3 text-sm font-semibold text-white">
+              <button className="brand-gradient rounded-md px-6 py-3 text-sm font-semibold text-white">
                 Explore Technologies
               </button>
               <button className="rounded-md border border-gray-200 bg-white px-6 py-3 text-sm font-semibold text-[#334155]">
